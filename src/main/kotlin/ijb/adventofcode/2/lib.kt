@@ -40,3 +40,21 @@ fun isGamePossible(game: Game, bag: Map<String, Int>): Boolean {
 
     return true
 }
+
+fun calculateMinimumBag(game: Game): Map<String, Int> {
+    val bag = mutableMapOf(
+        "red" to 0,
+        "green" to 0,
+        "blue" to 0
+    )
+
+    game.sets.forEach{ set ->
+        set.forEach { (color, usedPieces) ->
+            if (usedPieces > bag[color]!!) {
+                bag[color] = usedPieces
+            }
+        }
+    }
+
+    return bag
+}

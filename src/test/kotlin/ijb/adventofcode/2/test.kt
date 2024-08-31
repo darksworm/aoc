@@ -57,7 +57,7 @@ class Test {
     }
 
     @Test
-    fun `isGamePossible does shit`()  {
+    fun `isGamePossible does shit`() {
         val game = parseLine("Game 96: 13 blue, 10 red, 2 green; 10 red, 2 green, 1 blue; 6 blue, 5 red, 3 green; 11 red, 3 green, 5 blue; 11 red, 2 green; 3 green, 6 blue")
         val bag = mapOf("red" to 12, "blue" to 13, "green" to 14)
 
@@ -65,4 +65,11 @@ class Test {
             .isTrue()
     }
 
+    @Test
+    fun `miniumBag does things`() {
+        val game = parseLine("Game 96: 13 blue, 10 red, 2 green; 10 red, 2 green, 1 blue; 6 blue, 5 red, 3 green; 11 red, 3 green, 5 blue; 11 red, 2 green; 3 green, 6 blue")
+
+        expectThat(calculateMinimumBag(game))
+            .isEqualTo(mapOf("blue" to 13, "green" to 3, "red" to 11))
+    }
 }

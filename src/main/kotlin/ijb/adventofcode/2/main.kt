@@ -1,8 +1,5 @@
-package ijb.adventofcode.`1`
+package ijb.adventofcode.`2`
 
-import ijb.adventofcode.`2`.calculateMinimumBag
-import ijb.adventofcode.`2`.isGamePossible
-import ijb.adventofcode.`2`.parseLine
 import java.io.File
 
 fun main() {

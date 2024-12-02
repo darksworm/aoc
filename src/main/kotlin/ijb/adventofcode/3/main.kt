@@ -13,7 +13,7 @@ fun read(filePath: String): List<List<Int>> {
     return list
 }
 
-fun isSafe(report: List<Int>, recursionLevel: Int = 0): Boolean {
+fun isSafe(report: List<Int>): Boolean {
     var isIncreasing: Boolean? = null
 
     report.withIndex().forEach{ (index, current) ->
@@ -27,40 +27,14 @@ fun isSafe(report: List<Int>, recursionLevel: Int = 0): Boolean {
             isIncreasing = next > current
         } else {
             if (isIncreasing != next > current) {
-                if (recursionLevel > 0) {
-                    return@isSafe false;
-                } else {
-                    return@isSafe isSafe(
-                        report.toMutableList().apply { removeAt(index + 1) },
-                        recursionLevel + 1
-                    ) || isSafe(
-                        report.toMutableList().apply { removeAt(index) },
-                        recursionLevel + 1
-                    )
-                }
+                return@isSafe false;
             }
         }
 
         val difference = abs(next - current)
 
         if (difference > 3 || difference < 1) {
-            if (recursionLevel > 0) {
-                return@isSafe false;
-            }
-
-            if (index == 0) {
-                if(isSafe(
-                    report.toMutableList().apply { removeAt(index) },
-                    recursionLevel + 1)
-                    ) {
-                    return@isSafe true;
-                }
-            }
-
-            return@isSafe isSafe(
-                report.toMutableList().apply { removeAt(index + 1) },
-                recursionLevel + 1
-            )
+            return@isSafe false;
         }
     }
 
@@ -69,11 +43,16 @@ fun isSafe(report: List<Int>, recursionLevel: Int = 0): Boolean {
 
 fun main() {
     val file = "/Users/ilmars/Dev/ijb.adventofcode/src/main/kotlin/ijb/adventofcode/3/input.txt"
-
     val sum = read(file)
-        .map{ x -> isSafe(x) }
-        .map{ x -> if (x) 1 else 0 }
-        .sum()
+        .map{
+            x -> listOf(x) + x.indices.map { index ->
+                x.toMutableList().apply { removeAt(index) }
+            }
+        }
+        .map{
+            x -> if(x.map{ y -> if (isSafe(y)) 1 else 0 }.sum() > 0) 1 else 0
+        }
+        .sum();
 
     println("Your result is: $sum")
 }

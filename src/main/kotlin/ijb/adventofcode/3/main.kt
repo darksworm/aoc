@@ -33,11 +33,7 @@ fun isSafe(report: List<Int>): Boolean {
 
         val difference = abs(next - current)
 
-        if (difference > 3) {
-            return@isSafe false;
-        }
-
-        if (difference < 1) {
+        if (difference > 3 || difference < 1) {
             return@isSafe false;
         }
     }

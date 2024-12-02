@@ -13,7 +13,7 @@ fun read(filePath: String): List<List<Int>> {
     return list
 }
 
-fun isSafe(report: List<Int>): Boolean {
+fun isSafe(report: List<Int>, recursionLevel: Int = 0): Boolean {
     var isIncreasing: Boolean? = null
 
     report.withIndex().forEach{ (index, current) ->
@@ -27,14 +27,40 @@ fun isSafe(report: List<Int>): Boolean {
             isIncreasing = next > current
         } else {
             if (isIncreasing != next > current) {
-                return@isSafe false;
+                if (recursionLevel > 0) {
+                    return@isSafe false;
+                } else {
+                    return@isSafe isSafe(
+                        report.toMutableList().apply { removeAt(index + 1) },
+                        recursionLevel + 1
+                    ) || isSafe(
+                        report.toMutableList().apply { removeAt(index) },
+                        recursionLevel + 1
+                    )
+                }
             }
         }
 
         val difference = abs(next - current)
 
         if (difference > 3 || difference < 1) {
-            return@isSafe false;
+            if (recursionLevel > 0) {
+                return@isSafe false;
+            }
+
+            if (index == 0) {
+                if(isSafe(
+                    report.toMutableList().apply { removeAt(index) },
+                    recursionLevel + 1)
+                    ) {
+                    return@isSafe true;
+                }
+            }
+
+            return@isSafe isSafe(
+                report.toMutableList().apply { removeAt(index + 1) },
+                recursionLevel + 1
+            )
         }
     }
 

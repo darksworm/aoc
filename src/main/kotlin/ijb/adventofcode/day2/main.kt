@@ -1,4 +1,4 @@
-package ijb.adventofcode.`3`
+package ijb.adventofcode.day2
 
 import java.io.File
 import kotlin.math.abs
@@ -42,7 +42,7 @@ fun isSafe(report: List<Int>): Boolean {
 }
 
 fun main() {
-    val file = "/Users/ilmars/Dev/ijb.adventofcode/src/main/kotlin/ijb/adventofcode/3/input.txt"
+    val file = "/Users/ilmars/Dev/ijb.adventofcode/src/main/kotlin/ijb/adventofcode/day2/input.txt"
     val sum = read(file)
         .map{
             x -> listOf(x) + x.indices.map { index ->
@@ -54,5 +54,5 @@ fun main() {
         }
         .sum();
 
-    println("Your result is: $sum")
+    println("Part two result is: $sum")
 }

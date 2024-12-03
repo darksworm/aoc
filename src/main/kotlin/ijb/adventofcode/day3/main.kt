@@ -1,7 +1,6 @@
-package ijb.adventofcode.`4`
+package ijb.adventofcode.day3
 
 import java.io.File
-import kotlin.math.abs
 
 fun read(filePath: String): String {
     return File(filePath).readText(Charsets.UTF_8)
@@ -14,9 +13,9 @@ enum class Instruction {
 }
 
 fun main() {
-    val file = "/Users/ilmars/Dev/ijb.adventofcode/src/main/kotlin/ijb/adventofcode/4/input.txt"
+    val file = "/Users/ilmars/Dev/ijb.adventofcode/src/main/kotlin/ijb/adventofcode/day3/input.txt"
 
-    val content = "do()" + read(file)
+    val content = read(file)
 
     var isOff = false
 
@@ -25,12 +24,11 @@ fun main() {
         .findAll(content)
         .map {
             Pair(
-                if (it.groups[0]?.value?.startsWith("mul") == true)
-                    Instruction.MUL
-                else if (it.groups[0]?.value?.startsWith("don") == true)
-                    Instruction.DONT
-                else Instruction.DO,
-
+                when {
+                    it.groups[0]?.value?.startsWith("mul") == true -> Instruction.MUL
+                    it.groups[0]?.value?.startsWith("don") == true -> Instruction.DONT
+                    else -> Instruction.DO
+                },
                 it.groups[0]?.value
             )
         }
@@ -54,5 +52,5 @@ fun main() {
         }
         .sum()
 
-    println("Your result is: $sum")
+    println("Part two result is: $sum")
 }

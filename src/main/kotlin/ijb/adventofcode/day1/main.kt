@@ -1,4 +1,4 @@
-package ijb.adventofcode.`1`
+package ijb.adventofcode.day1
 
 import java.io.File
 import kotlin.math.abs
@@ -23,9 +23,7 @@ fun sort(input: Pair<List<Int>, List<Int>>): Pair<List<Int>, List<Int>> {
     )
 }
 
-fun main() {
-    val file = "/Users/ilmars/Dev/ijb.adventofcode/src/main/kotlin/ijb/adventofcode/1/input.txt"
-
+fun partOne(file: String): Int {
     val input = read(file)
     val sorted = sort(input)
 
@@ -35,7 +33,23 @@ fun main() {
         abs(firstVal - sorted.second[index])
     }
 
-    val sum = differences.sum()
+    return differences.sum()
+}
 
-    println("Your result is: $sum")
+fun partTwo(file: String): Int {
+    val input = read(file)
+
+    val similarityScores = input.first.map { firstVal ->
+        val matches = input.second.filter{ secondVal -> secondVal == firstVal }
+        firstVal * matches.count()
+    }
+
+    return similarityScores.sum()
+}
+
+fun main() {
+    val file = "/Users/ilmars/Dev/ijb.adventofcode/src/main/kotlin/ijb/adventofcode/day1/input.txt"
+
+    println("Part one result is: ${partOne(file)}")
+    println("Part two result is: ${partTwo(file)}")
 }

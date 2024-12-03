@@ -42,7 +42,7 @@ fun isSafe(report: List<Int>): Boolean {
 }
 
 fun main() {
-    val file = "/Users/ilmars/Dev/ijb.adventofcode/src/main/kotlin/ijb/adventofcode/day2/input.txt"
+    val file = "./src/main/kotlin/ijb/adventofcode/day2/input.txt"
     val sum = read(file)
         .map{
             x -> listOf(x) + x.indices.map { index ->

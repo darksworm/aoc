@@ -48,7 +48,7 @@ fun partTwo(file: String): Int {
 }
 
 fun main() {
-    val file = "/Users/ilmars/Dev/ijb.adventofcode/src/main/kotlin/ijb/adventofcode/day1/input.txt"
+    val file = "./src/main/kotlin/ijb/adventofcode/day1/input.txt"
 
     println("Part one result is: ${partOne(file)}")
     println("Part two result is: ${partTwo(file)}")

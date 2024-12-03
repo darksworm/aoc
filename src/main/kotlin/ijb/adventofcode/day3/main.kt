@@ -13,7 +13,7 @@ enum class Instruction {
 }
 
 fun main() {
-    val file = "/Users/ilmars/Dev/ijb.adventofcode/src/main/kotlin/ijb/adventofcode/day3/input.txt"
+    val file = "./src/main/kotlin/ijb/adventofcode/day3/input.txt"
 
     val content = read(file)
 

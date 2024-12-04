@@ -9,26 +9,48 @@ fun read(filePath: String): String {
 fun partTwo(input: String): Int {
     // convert array into 2d array
     val array = input.split("\n")
-        .filterNot{ it.isEmpty() } // last line is probably empty
+        .filterNot { it.isEmpty() } // last line is probably empty
         .map {
             it.split("").toTypedArray()
         }
         .toTypedArray()
 
-    return 0;
+    val allALocations = array.mapIndexed { upperIndex, upperElem ->
+        upperElem.mapIndexed { index, elem -> if (elem == "A") Pair(upperIndex, index) else null }.filterNotNull()
+    }.flatten()
+
+    var counter = 0;
+
+    for ((y, x) in allALocations) {
+        if (!(y - 1 >= 0 && y + 1 < array.size && x - 1 >= 0 && x - 1 < array[y].size)) {
+            continue;
+        }
+
+        val firstDiagonal = array[y - 1][x - 1] + array[y][x] + array[y + 1][x + 1];
+        val secondDiagonal = array[y + 1][x - 1] + array[y][x] + array[y - 1][x + 1];
+
+        if (
+            (firstDiagonal == "MAS" || firstDiagonal.reversed() == "MAS") &&
+            (secondDiagonal == "MAS" || secondDiagonal.reversed() == "MAS")
+            ) {
+            counter++
+        }
+    }
+
+    return counter;
 }
 
 fun partOne(input: String): Int {
     // convert array into 2d array
     val array = input.split("\n")
-        .filterNot{ it.isEmpty() } // last line is probably empty
+        .filterNot { it.isEmpty() } // last line is probably empty
         .map {
             it.split("").toTypedArray()
         }
         .toTypedArray()
 
-    val allXLocations = array.mapIndexed{ upperIndex, upperElem ->
-        upperElem.mapIndexed{ index, elem -> if (elem == "X") Pair(upperIndex, index) else null }.filterNotNull()
+    val allXLocations = array.mapIndexed { upperIndex, upperElem ->
+        upperElem.mapIndexed { index, elem -> if (elem == "X") Pair(upperIndex, index) else null }.filterNotNull()
     }.flatten()
 
     var counter = 0;

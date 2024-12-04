@@ -6,15 +6,19 @@ fun read(filePath: String): String {
     return File(filePath).readText(Charsets.UTF_8)
 }
 
-fun partOne(filePath: String): Int {
-    return countXmas(read(filePath));
+fun partTwo(input: String): Int {
+    // convert array into 2d array
+    val array = input.split("\n")
+        .filterNot{ it.isEmpty() } // last line is probably empty
+        .map {
+            it.split("").toTypedArray()
+        }
+        .toTypedArray()
+
+    return 0;
 }
 
-fun partTwo(filePath: String): Int {
-    return -1;
-}
-
-fun countXmas(input: String): Int {
+fun partOne(input: String): Int {
     // convert array into 2d array
     val array = input.split("\n")
         .filterNot{ it.isEmpty() } // last line is probably empty
@@ -76,7 +80,8 @@ fun countXmas(input: String): Int {
 
 fun main() {
     val file = "./src/main/kotlin/ijb/adventofcode/day4/input.txt"
+    val content = read(file)
 
-    println("Part one result is: ${partOne(file)}")
-    println("Part two result is: ${partTwo(file)}")
+    println("Part one result is: ${partOne(content)}")
+    println("Part two result is: ${partTwo(content)}")
 }

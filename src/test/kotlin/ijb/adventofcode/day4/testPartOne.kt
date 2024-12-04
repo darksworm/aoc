@@ -4,30 +4,30 @@ import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.*
 
-class Test {
+class TestPartOne {
 
     @Test
     fun `can count horizontal XMAS's`() {
         val input = "asdfXMASxxasdfa"
-        expectThat(countXmas(input)).isEqualTo(1)
+        expectThat(partOne(input)).isEqualTo(1)
     }
 
     @Test
     fun `doesn't crash if xmas is at end`() {
         val input = "asdfXMAS"
-        expectThat(countXmas(input)).isEqualTo(1)
+        expectThat(partOne(input)).isEqualTo(1)
     }
 
     @Test
     fun `can count reversed horizontal XMAS's`() {
         val input = "asdfSAMXxxasdfa"
-        expectThat(countXmas(input)).isEqualTo(1)
+        expectThat(partOne(input)).isEqualTo(1)
     }
 
     @Test
     fun `doesnt crash if xmas is at beginning`() {
         val input = "SAMXxxasdfa"
-        expectThat(countXmas(input)).isEqualTo(1)
+        expectThat(partOne(input)).isEqualTo(1)
     }
 
     @Test
@@ -38,7 +38,7 @@ class Test {
             A
             S
         """.trimIndent()
-        expectThat(countXmas(input)).isEqualTo(1)
+        expectThat(partOne(input)).isEqualTo(1)
     }
 
     @Test
@@ -49,7 +49,7 @@ class Test {
             M
             X
         """.trimIndent().reversed()
-        expectThat(countXmas(input)).isEqualTo(1)
+        expectThat(partOne(input)).isEqualTo(1)
     }
 
     @Test
@@ -60,7 +60,7 @@ class Test {
             PPAP
             PPPS
         """.trimIndent()
-        expectThat(countXmas(input)).isEqualTo(1)
+        expectThat(partOne(input)).isEqualTo(1)
     }
 
     @Test
@@ -71,7 +71,7 @@ class Test {
             PPMP
             PPPX
         """.trimIndent()
-        expectThat(countXmas(input)).isEqualTo(1)
+        expectThat(partOne(input)).isEqualTo(1)
     }
 
     @Test
@@ -82,7 +82,7 @@ class Test {
             PAPP
             SPPP
         """.trimIndent()
-        expectThat(countXmas(input)).isEqualTo(1)
+        expectThat(partOne(input)).isEqualTo(1)
     }
 
     @Test
@@ -93,12 +93,12 @@ class Test {
             PMPP
             XPPP
         """.trimIndent()
-        expectThat(countXmas(input)).isEqualTo(1)
+        expectThat(partOne(input)).isEqualTo(1)
     }
 
     @Test
     fun `can share letters`() {
-        expectThat(countXmas("XMASAMX")).isEqualTo(2)
+        expectThat(partOne("XMASAMX")).isEqualTo(2)
     }
 
     @Test
@@ -116,7 +116,7 @@ class Test {
             MXMXAXMASX
         """.trimIndent()
 
-        expectThat(countXmas(input)).isEqualTo(18)
+        expectThat(partOne(input)).isEqualTo(18)
     }
 
     @Test
@@ -130,6 +130,6 @@ class Test {
             M
             X
         """.trimIndent()
-        expectThat(countXmas(input)).isEqualTo(2)
+        expectThat(partOne(input)).isEqualTo(2)
     }
 }

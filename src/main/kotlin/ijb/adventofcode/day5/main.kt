@@ -4,42 +4,26 @@ import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
 
-fun read(filePath: String): Pair<String, String> {
-    val content = File(filePath).readText(Charsets.UTF_8).trim()
+fun read(filePath: String): Pair<String, String> =
+    File(filePath).readText(Charsets.UTF_8).trim()
+        .split("\n\n")
+        .let {
+            require(it.size == 2) { "File format is incorrect." }
+            it[0] to it[1]
+        }
 
-    val split = content.split("\n\n")
-
-    assert(split.size == 2)
-
-    return Pair(split[0], split[1])
-}
-
-fun rulesToMap(rules: String): Map<Int, List<Int>> {
-    val result = mutableMapOf<Int, MutableList<Int>>()
-
+fun rulesToMap(rules: String): Map<Int, List<Int>> =
     rules
+        .lineSequence()
+        .map { it.split("|").map(String::toInt) }
+        .groupBy({ it[0] }, { it[1] })
+
+fun updatesToList(updates: String): List<Array<Int>> =
+    updates
         .split("\n")
-        .map {
-            it.split("|").map(String::toInt)
+        .map{
+            it.split(",").map(String::toInt).toTypedArray()
         }
-        .forEach {
-            if (!result.containsKey(it[0])) {
-                result[it[0]] = mutableListOf(it[1])
-            } else {
-                result[it[0]]!!.add(it[1])
-            }
-        }
-
-    return result
-}
-
-fun updatesToList(updates: String): List<Array<Int>> {
-    return updates
-            .split("\n")
-            .map{
-                it.split(",").map(String::toInt).toTypedArray()
-            }
-}
 
 fun isValidUpdate(ruleMap: Map<Int, List<Int>>, update: Array<Int>): Boolean {
     update.forEachIndexed { index, value ->

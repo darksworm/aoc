@@ -96,7 +96,7 @@ fun calculateAllPossibleWallPlacements(lines: List<String>) = iterator {
 }
 
 fun hasLoop(lines: List<String>): Boolean {
-    val turnPositions: Stack<Pair<Position, Direction>> = Stack()
+    val turnPositions: HashSet<Pair<Position, Direction>> = hashSetOf()
 
     walkWhileNotOutOfBounds(lines) { curPos, curDir, nextPos ->
         if (lines[nextPos.y][nextPos.x] == '#') {
@@ -104,7 +104,7 @@ fun hasLoop(lines: List<String>): Boolean {
                 return@hasLoop true
             }
 
-            turnPositions.add(Pair(curPos, curDir))
+            turnPositions += Pair(curPos, curDir)
         }
     }
 

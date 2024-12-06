@@ -2,14 +2,16 @@ package ijb.adventofcode.day6
 
 import java.io.File
 
+data class Position(var x: Int, var y: Int)
+
+enum class Direction {
+    L, R, U, D;
+}
+
 fun read(filePath: String): String {
     return File(filePath)
         .readText(Charsets.UTF_8)
         .trim()
-}
-
-enum class Direction {
-    L, R, U, D;
 }
 
 fun isGoingOOB(lines: List<String>, direction: Direction, position: Position): Boolean =
@@ -33,8 +35,6 @@ fun turnRight(direction: Direction): Direction =
         Direction.D -> Direction.L
         Direction.L -> Direction.U
     }
-
-data class Position(var x: Int, var y: Int)
 
 fun partOne(input: String): Int {
     val lines = input

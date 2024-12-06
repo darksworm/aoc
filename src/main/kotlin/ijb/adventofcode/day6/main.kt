@@ -1,6 +1,12 @@
 package ijb.adventofcode.day6
 
+import kotlinx.coroutines.*
+import java.util.concurrent.atomic.AtomicInteger
+
 import java.io.File
+import java.util.*
+import java.util.concurrent.Executors
+import kotlin.time.measureTime
 
 data class Position(var x: Int, var y: Int)
 
@@ -79,15 +85,102 @@ fun partOne(input: String): Int {
     return visitedPositions.size + 1
 }
 
-fun partTwo(filePath: String): Int {
-    read(filePath)
+fun partTwo(input: String): Int {
+    val lines = input
+        .split(System.lineSeparator())
+        .toMutableList()
 
-    return 0;
+    val result = AtomicInteger(0)
+    val dispatcher = Executors.newFixedThreadPool(10).asCoroutineDispatcher()
+
+    System.err.println("Progress (130 total #s):")
+
+    runBlocking(dispatcher) {
+        val jobs = mutableListOf<Deferred<Unit>>()
+
+        for ((lineIdx, line) in lines.withIndex()) {
+            jobs.add(async {
+                for ((letterIdx, _) in line.toList().withIndex()) {
+                    val copy = lines.toMutableList()
+                    if (copy[lineIdx][letterIdx] == '#' || copy[lineIdx][letterIdx] == '^') {
+                        continue
+                    }
+
+                    copy[lineIdx] = lines[lineIdx].toMutableList().apply {
+                        this[letterIdx] = '#'
+                    }.joinToString("")
+
+                    if (hasLoop(copy)) {
+                        result.incrementAndGet()
+                    }
+                }
+
+                System.err.print("#")
+            })
+        }
+
+        jobs.awaitAll()
+    }
+
+    dispatcher.close()
+    System.err.println()
+
+    return result.get()
+}
+
+fun hasLoop(lines: MutableList<String>): Boolean {
+    val y = lines.indexOfFirst { it.contains("^") }
+    assert(y >= 0)
+    val x = lines[y].indexOf("^")
+    assert(x >= 0)
+
+    var curPos = Position(x, y)
+    var curDir = Direction.U
+
+    val turnPositions: Stack<Pair<Position, Direction>> = Stack()
+    var cycles = 0
+
+    while (!isGoingOOB(lines, curDir, curPos)) {
+        val nextPos = nextPosition(curDir, curPos)
+
+        if (lines[nextPos.y][nextPos.x] == '#') {
+            if(turnPositions.contains(Pair(curPos, curDir))) {
+                return true;
+            }
+
+            turnPositions.add(Pair(curPos, curDir))
+            curDir = turnRight(curDir)
+
+            continue;
+        }
+
+//        // for debugging - show the current position
+//        lines[curPos.y] = lines[curPos.y].toMutableList().apply {
+//            this[curPos.x] = ','
+//        }.joinToString("")
+//
+//        // for debugging - show the next position
+//        lines[nextPos.y] = lines[nextPos.y].toMutableList().apply {
+//            this[nextPos.x] = '^'
+//        }.joinToString("")
+
+        curPos = nextPos
+
+        // crash and burn if we're in a never ending loop
+        assert(++cycles < 1000);
+    }
+
+    return false;
 }
 
 fun main() {
     val file = "./src/main/kotlin/ijb/adventofcode/day6/input.txt"
 
     println("Part one result is: ${partOne(read(file))}")
-    println("Part two result is: ${partTwo(file)}")
+
+    val timeTaken = measureTime {
+        println("Part two result is: ${partTwo(read(file))}")
+    }
+
+    println("Part two took $timeTaken")
 }

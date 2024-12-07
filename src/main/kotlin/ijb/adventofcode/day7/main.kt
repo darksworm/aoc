@@ -1,7 +1,6 @@
 package ijb.adventofcode.day7
 
 import java.io.File
-import kotlin.time.measureTime
 
 data class Equation(val product: Long, val factors: List<Long>)
 typealias Operator = (Long, Long) -> Long
@@ -78,15 +77,24 @@ fun partOne(eqs: List<Equation>): Long =
 fun partTwo(eqs: List<Equation>) =
     processEquations(eqs, ops)
 
+inline fun <T> measureAndPrint(label: String, block: () -> T): T {
+    var result: T
+    val timeTaken = kotlin.time.measureTime {
+        result = block()
+    }
+    println("$label: $result (took $timeTaken)")
+    return result
+}
+
 fun main() {
     val file = "./src/main/kotlin/ijb/adventofcode/day7/input.txt"
     val content = read(file)
 
-    println("Part one result is: ${partOne(content)}")
-
-    val timeTaken = measureTime {
-        println("Part two result is: ${partTwo(content)}")
+    measureAndPrint("Part one result") {
+        partOne(content)
     }
 
-    println("Part two took $timeTaken")
+    measureAndPrint("Part two result") {
+        partTwo(content)
+    }
 }

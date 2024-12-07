@@ -3,8 +3,25 @@ package ijb.adventofcode.day7
 import java.io.File
 import kotlin.time.measureTime
 
-data class Equation(val product: Long, val factors: List<Int>)
-typealias Operator = (Long, Int) -> Long
+data class Equation(val product: Long, val factors: List<Long>)
+typealias Operator = (Long, Long) -> Long
+
+// 666 + 777 = 666000 + 777
+fun Long.fastConcat(num: Long): Long {
+    var multiplier = 1L
+    var temp = num
+    while (temp > 0) {
+        temp /= 10
+        multiplier *= 10
+    }
+    return this * multiplier + num
+}
+
+val ops: List<Operator> = listOf(
+    { a, b -> a + b },
+    { a, b -> a * b },
+    { a, b -> a.fastConcat(b) }
+)
 
 fun read(filePath: String): List<Equation> =
     File(filePath)
@@ -13,26 +30,27 @@ fun read(filePath: String): List<Equation> =
         .split(System.lineSeparator())
         .map {
             it.split(" ", ": ")
-                .let { x -> Equation(x[0].toLong(), x.drop(1).map(String::toInt)) }
+                .let { x -> Equation(x[0].toLong(), x.drop(1).map(String::toLong)) }
         }
 
-fun generateOperatorCombos(factorCount: Int): List<List<Operator>> {
+private val operatorCombosCache = mutableMapOf<Pair<Int, Int>, List<List<Operator>>>()
+
+fun generateOperatorCombos(factorCount: Int, ops: List<Operator>): Sequence<List<Operator>> {
     val operatorCount = factorCount - 1
-    if (operatorCount <= 0) {
-        return emptyList()
+    if (operatorCount <= 0) return emptySequence()
+
+    val key = Pair(factorCount, ops.size)
+
+    if (operatorCombosCache[key] == null) {
+        operatorCombosCache[key] = (1..operatorCount)
+            .fold(listOf(emptyList())) { acc, _ ->
+                acc.flatMap { combo ->
+                    ops.map { combo + it }
+                }
+            }
     }
 
-    val ops: List<(Long, Int) -> Long> = listOf(
-        { a, b -> a + b },
-        { a, b -> a * b }
-    )
-    val comboCount = 1 shl operatorCount // 2 ^ (operatorCount)
-
-    return List(comboCount) { mask ->
-        List(operatorCount) { i ->
-            ops[(mask shr i) and 1]
-        }
-    }
+    return operatorCombosCache[key]!!.asSequence()
 }
 
 fun applyOperators(eq: Equation, operators: List<Operator>): Long {
@@ -41,23 +59,26 @@ fun applyOperators(eq: Equation, operators: List<Operator>): Long {
     return eq.factors
         .drop(1)
         .zip(operators)
-        .fold(eq.factors.first().toLong()) { acc, (value, op) ->
+        .fold(eq.factors.first()) { acc, (value, op) ->
             if (acc > eq.product) return@applyOperators -1 else op(acc, value)
         }
 }
 
 fun partOne(eqs: List<Equation>): Long =
     eqs.sumOf { eq ->
-        generateOperatorCombos(eq.factors.size)
-            .asSequence()
+        generateOperatorCombos(eq.factors.size, ops.take(2))
             .map { applyOperators(eq, it) }
             .firstOrNull { it == eq.product }
             ?: 0
     }
 
-fun partTwo(eqs: List<Equation>): Int {
-    return -1
-}
+fun partTwo(eqs: List<Equation>) =
+    eqs.sumOf { eq ->
+        generateOperatorCombos(eq.factors.size, ops)
+            .map { applyOperators(eq, it) }
+            .firstOrNull { it == eq.product }
+            ?: 0
+    }
 
 fun main() {
     val file = "./src/main/kotlin/ijb/adventofcode/day7/input.txt"

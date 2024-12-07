@@ -21,6 +21,6 @@ class TestPartOne {
             ......#...
         """.trimIndent()
 
-        expectThat(partOne(input)).isEqualTo(41)
+        expectThat(partOne(input.split("\n"))).isEqualTo(41)
     }
 }

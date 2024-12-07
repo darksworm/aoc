@@ -64,21 +64,19 @@ fun applyOperators(eq: Equation, operators: List<Operator>): Long {
         }
 }
 
-fun partOne(eqs: List<Equation>): Long =
-    eqs.sumOf { eq ->
-        generateOperatorCombos(eq.factors.size, ops.take(2))
-            .map { applyOperators(eq, it) }
-            .firstOrNull { it == eq.product }
-            ?: 0
-    }
-
-fun partTwo(eqs: List<Equation>) =
+fun processEquations(eqs: List<Equation>, ops: List<Operator>): Long =
     eqs.sumOf { eq ->
         generateOperatorCombos(eq.factors.size, ops)
             .map { applyOperators(eq, it) }
             .firstOrNull { it == eq.product }
             ?: 0
     }
+
+fun partOne(eqs: List<Equation>): Long =
+    processEquations(eqs, ops.take(2))
+
+fun partTwo(eqs: List<Equation>) =
+    processEquations(eqs, ops)
 
 fun main() {
     val file = "./src/main/kotlin/ijb/adventofcode/day7/input.txt"
